@@ -8,7 +8,8 @@ module Stretch
 
     def health
       if @index.nil?
-        raise StandardError
+        raise InvalidScopeError,
+          "Health requires either cluster or an index"
       else
         get @scope, :health
       end
