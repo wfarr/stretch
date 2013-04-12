@@ -6,6 +6,7 @@
 Gemfile.lock
 InstalledFiles
 _yardoc
+bin/
 coverage
 doc/
 lib/bundler/man
@@ -14,4 +15,5 @@ rdoc
 spec/reports
 test/tmp
 test/version_tmp
+vendor/gems
 tmp
