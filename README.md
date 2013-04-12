@@ -1,6 +1,7 @@
 # Stretch
 
-Shhh -- a secret!
+Elasticsearch client library written for people who like understandable
+documentation and understandable code.
 
 ## Installation
 
@@ -18,7 +19,17 @@ Or install it yourself as:
 
 ## Usage
 
-You obviously can't use this yet.
+### Cluster Health
+
+``` ruby
+Stretch.cluster.health
+```
+
+### Index Health
+
+``` ruby
+Stretch.index('tweets').health
+```
 
 ## Contributing
 
