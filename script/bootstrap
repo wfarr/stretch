@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -e
+
+bundle install --path vendor/gems --binstubs bin "$@"
