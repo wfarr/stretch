@@ -15,8 +15,18 @@ module Stretch
       end
     end
 
+    def connection
+    end
+
     private
     def get(*args)
+      response = connection.get *args
+
+      if response.success?
+        response
+      else
+        response.error!
+      end
     end
   end
 end
