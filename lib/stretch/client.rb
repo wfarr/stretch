@@ -1,8 +1,14 @@
+require "stretch/connection"
+require "stretch/uri_builder"
+
 module Stretch
   class Client
-    def initialize
+    attr_reader :connection, :scope
+
+    def initialize options = {}
       @index = nil
       @scope = {}
+      @connection = Stretch::Connection.new options
     end
 
     def index name = nil
@@ -25,12 +31,9 @@ module Stretch
       end
     end
 
-    def connection
-    end
-
     private
     def get(scope, path, options = {})
-      response = connection.get URIBuilder.build(scope, path, options)
+      response = connection.get Stretch::URIBuilder.build(scope, path, options)
 
       if response.success?
         response.parsed_body
