@@ -24,8 +24,7 @@ module Stretch
 
     def health
       if @index.nil?
-        raise InvalidScopeError,
-          "Health requires either cluster or an index"
+        raise InvalidScope, "Health requires either cluster or an index"
       else
         connection.get Stretch::URIBuilder.build_from_scope(@scope, "/health")
       end

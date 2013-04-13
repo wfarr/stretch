@@ -18,7 +18,7 @@ describe Stretch::Client do
     instance = described_class.new
 
     instance.stub :index, nil do
-      assert_raises Stretch::InvalidScopeError do
+      assert_raises Stretch::InvalidScope do
         instance.health
       end
     end
