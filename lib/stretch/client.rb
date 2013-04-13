@@ -27,18 +27,7 @@ module Stretch
         raise InvalidScopeError,
           "Health requires either cluster or an index"
       else
-        get @scope, "/health"
-      end
-    end
-
-    private
-    def get(scope, path, options = {})
-      response = connection.get Stretch::URIBuilder.build(scope, path, options)
-
-      if response.success?
-        response.parsed_body
-      else
-        response.error!
+        connection.get Stretch::URIBuilder.build_from_scope(@scope, "/health")
       end
     end
   end

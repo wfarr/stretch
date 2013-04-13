@@ -23,7 +23,7 @@ describe Stretch::Client do
       end
     end
 
-    instance.stub :get, { "status" => "ok" } do
+    instance.connection.stub :get, { "status" => "ok" } do
       assert_equal "ok", instance.index("foo").health["status"]
     end
   end
