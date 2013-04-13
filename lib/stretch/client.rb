@@ -33,7 +33,7 @@ module Stretch
       response = connection.get URIBuilder.build(scope, path, options)
 
       if response.success?
-        response
+        response.parsed_body
       else
         response.error!
       end
