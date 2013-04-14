@@ -48,3 +48,10 @@ $stretch.cluster.settings :persistent => {
 
 $stretch.index('foo').settings :index => { :number_of_replicas => 2 }
 ```
+
+### Opening and Closing Indices
+
+``` ruby
+$stretch.index('foo').open!
+$stretch.index('bar').close!
+```

@@ -33,36 +33,51 @@ module Stretch
 
     # End points
     def health options = {}
-      if scope[:index] || scope[:cluster]
+      with_scopes :cluster, :index do
         connection.get build_path("/health"), options
-      else
-        raise InvalidScope, "Health requires a cluster or index level scope"
       end
     end
 
     def state options = {}
-      if @scope[:cluster]
+      with_scopes :cluster do
         connection.get build_path("/state"), options
-      else
-        raise InvalidScope, "State requires a cluster level scope"
       end
     end
 
     def settings options = {}
-      if @scope[:index] || @scope[:cluster]
+      with_scopes :cluster, :index do
         if options.any?
           connection.put build_path("/settings"), options
         else
           connection.get build_path("/settings")
         end
-      else
-        raise InvalidScope, "Settings requires a cluster or index level scope"
+      end
+    end
+
+    def open!
+      with_scopes :index do
+        connection.post build_path("/_open")
+      end
+    end
+
+    def close!
+      with_scopes :index do
+        connection.post build_path("/_close")
       end
     end
 
     private
     def build_path path
       Stretch::URIBuilder.build_from_scope scope, path
+    end
+
+    def with_scopes *scopes, &block
+      if scopes.any? {|s| scope.has_key?(s) && scope[s] }
+        yield
+      else
+        raise InvalidScope,
+          "Requires one of the following scopes: #{scopes.inspect}. #{scope.inspect} given."
+      end
     end
   end
 end

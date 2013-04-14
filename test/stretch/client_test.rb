@@ -4,6 +4,8 @@ require "stretch/client"
 
 describe Stretch::Client do
   let(:instance) { described_class.new }
+  let(:connection) { MiniTest::Mock.new }
+
   describe ".new" do
     describe "scope defaults" do
       it "index to nil" do
@@ -27,12 +29,6 @@ describe Stretch::Client do
   end
 
   describe "#health" do
-    let(:connection) { MiniTest::Mock.new }
-
-    after do
-      connection.verify
-    end
-
     it "requires either a cluster scope or an index scope" do
       instance.stub :scope, { :cluster => false, :index => nil } do
         assert_raises Stretch::InvalidScope do
@@ -45,6 +41,8 @@ describe Stretch::Client do
       instance.stub :connection, connection do
         connection.expect :get, { "status" => "ok" }, ["/_cluster/health", {}]
         instance.cluster.health
+
+        connection.verify
       end
     end
 
@@ -52,6 +50,8 @@ describe Stretch::Client do
       instance.stub :connection, connection do
         connection.expect :get, { "status" => "ok" }, ["/foo/health", {}]
         instance.index("foo").health
+
+        connection.verify
       end
     end
   end
@@ -73,8 +73,6 @@ describe Stretch::Client do
   end
 
   describe "#settings" do
-    let(:connection) { MiniTest::Mock.new }
-
     it "requires either a cluster scope or an index scope" do
       instance.stub :scope, { :cluster => false, :index => nil } do
         assert_raises Stretch::InvalidScope do
@@ -84,25 +82,19 @@ describe Stretch::Client do
     end
 
     describe "no options given" do
-      after do
-        connection.verify
-      end
-
       it "performs a get request for the settings" do
         response = { "persistent" => { "foo" => 1 } }
 
         instance.stub :connection, connection do
           connection.expect :get, response, ["/_cluster/settings"]
           assert_equal 1, instance.cluster.settings["persistent"]["foo"]
+
+          connection.verify
         end
       end
     end
 
     describe "options given" do
-      after do
-        connection.verify
-      end
-
       it "performs a put request with options for the settings" do
         params   = { :index => { :refresh_interval => -1 } }
         response = { "index" => {"refresh_interval" => -1} }
@@ -110,7 +102,51 @@ describe Stretch::Client do
         instance.stub :connection, connection do
           connection.expect :put, response, ["/foo/settings", params]
           assert_equal -1, instance.index("foo").settings(params)["index"]["refresh_interval"]
+
+          connection.verify
         end
+      end
+    end
+  end
+
+  describe "#open!" do
+    it "requires the index scope" do
+      instance.stub :scope, { :cluster => true, :index => nil } do
+        assert_raises Stretch::InvalidScope do
+          instance.open!
+        end
+      end
+    end
+
+    it "performs a post request to open the index" do
+      response = { "ok" => true, "acknowledged" => true }
+
+      instance.stub :connection, connection do
+        connection.expect :post, response, ["/foo/_open"]
+        assert_equal true, instance.index("foo").open!["ok"]
+
+        connection.verify
+      end
+    end
+  end
+
+  describe "#close!" do
+    it "requires the index scope" do
+      instance.stub :scope, { :cluster => true, :index => nil } do
+        assert_raises Stretch::InvalidScope do
+          instance.close!
+        end
+      end
+    end
+
+    it "performs a post request to close the index" do
+      response = { "ok" => true, "acknowledged" => true }
+
+      instance.stub :connection, connection do
+        connection.expect :post, response, ["/foo/_close"]
+        assert_equal true, instance.index("foo").close!["ok"]
+
+        connection.verify
       end
     end
   end
