@@ -38,3 +38,13 @@ $stretch.index('tweets').health :wait_for_status => 'green'
 $stretch.cluster.state
 $stretch.cluster.state :filter_nodes => true
 ```
+
+### Cluster and Index Settings
+
+``` ruby
+$stretch.cluster.settings :persistent => {
+  "cluster.routing.allocation.node_concurrent_recoveries" => 4
+}
+
+$stretch.index('foo').settings :index => { :number_of_replicas => 2 }
+```

@@ -36,7 +36,7 @@ module Stretch
       if scope[:index] || scope[:cluster]
         connection.get build_path("/health"), options
       else
-        raise InvalidScope, "Health requires either cluster or an index"
+        raise InvalidScope, "Health requires a cluster or index level scope"
       end
     end
 
@@ -45,6 +45,18 @@ module Stretch
         connection.get build_path("/state"), options
       else
         raise InvalidScope, "State requires a cluster level scope"
+      end
+    end
+
+    def settings options = {}
+      if @scope[:index] || @scope[:cluster]
+        if options.any?
+          connection.put build_path("/settings"), options
+        else
+          connection.get build_path("/settings")
+        end
+      else
+        raise InvalidScope, "Settings requires a cluster or index level scope"
       end
     end
 
