@@ -16,26 +16,41 @@ module Stretch
       end
     end
 
+    # Chainable methods
     def cluster
       self.tap do
-        @scope[:cluster] = true
-        @scope[:index] = nil
+        scope[:cluster] = true
+        scope[:index] = nil
       end
     end
 
     def index name
       self.tap do
-        @scope[:cluster] = false
-        @scope[:index]   = name
+        scope[:cluster] = false
+        scope[:index]   = name
       end
     end
 
+    # End points
     def health
-      if @scope[:index].nil? && !@scope[:cluster]
-        raise InvalidScope, "Health requires either cluster or an index"
+      if scope[:index] || scope[:cluster]
+        connection.get build_path("/health")
       else
-        connection.get Stretch::URIBuilder.build_from_scope(@scope, "/health")
+        raise InvalidScope, "Health requires either cluster or an index"
       end
+    end
+
+    def state
+      if @scope[:cluster]
+        connection.get build_path("/state")
+      else
+        raise InvalidScope, "State requires a cluster level scope"
+      end
+    end
+
+    private
+    def build_path path
+      Stretch::URIBuilder.build_from_scope scope, path
     end
   end
 end

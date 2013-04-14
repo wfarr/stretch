@@ -37,4 +37,20 @@ describe Stretch::Client do
       assert_equal "ok", instance.index("foo").health["status"]
     end
   end
+
+  describe "#state" do
+    it "requires a cluster scope" do
+      instance.stub :scope, { :cluster => false } do
+        assert_raises Stretch::InvalidScope do
+          instance.state
+        end
+      end
+    end
+
+    it "can return the state of a cluster" do
+      instance.connection.stub :get, { "status" => "ok" } do
+        assert_equal "ok", instance.cluster.state["status"]
+      end
+    end
+  end
 end
