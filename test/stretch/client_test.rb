@@ -26,15 +26,33 @@ describe Stretch::Client do
     assert instance.scope[:cluster]
   end
 
-  it "can return the health of an index" do
-    instance.stub :index, nil do
-      assert_raises Stretch::InvalidScope do
-        instance.health
+  describe "#health" do
+    let(:connection) { MiniTest::Mock.new }
+
+    after do
+      connection.verify
+    end
+
+    it "requires either a cluster scope or an index scope" do
+      instance.stub :scope, { :cluster => false, :index => nil } do
+        assert_raises Stretch::InvalidScope do
+          instance.health
+        end
       end
     end
 
-    instance.connection.stub :get, { "status" => "ok" } do
-      assert_equal "ok", instance.index("foo").health["status"]
+    it "requests cluster health if the scope is cluster" do
+      instance.stub :connection, connection do
+        connection.expect :get, { "status" => "ok" }, %w(/_cluster/health)
+        instance.cluster.health
+      end
+    end
+
+    it "requests index health if the scope is an index" do
+      instance.stub :connection, connection do
+        connection.expect :get, { "status" => "ok" }, %w(/foo/health)
+        instance.index("foo").health
+      end
     end
   end
 
