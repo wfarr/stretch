@@ -1,5 +1,4 @@
 require "faraday"
-require "faraday_middleware"
 require "multi_json"
 
 module Stretch
@@ -9,15 +8,7 @@ module Stretch
     REQUEST_METHODS = [ :get, :post, :put, :delete ].freeze
 
     def initialize options = {}
-      @connection = Faraday.new(options) do |builder|
-        builder.request :json
-
-        builder.use FaradayMiddleware::FollowRedirects
-        builder.use FaradayMiddleware::ParseJson, :content_type => /\bjson$/
-
-        # not sure if we need this?
-        #builder.adapter *adapter
-      end
+      @connection = Faraday.new(options)
     end
 
     def get path, options = {}
@@ -48,7 +39,7 @@ module Stretch
       end
 
       if response.success?
-        response.body
+        MultiJson.load response.body
       else
         response.error!
       end

@@ -7,7 +7,7 @@ describe Stretch::Connection do
   let(:response) do
     Struct.new :response do
       def body
-        { "status" => "ok" }
+        MultiJson.dump({ "status" => "ok" })
       end
 
       def success?
