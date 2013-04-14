@@ -1,5 +1,8 @@
 # Stretch
 
+[![Build Status](https://travis-ci.org/wfarr/stretch.png?branch=master)](https://travis-ci.org/wfarr/stretch)
+[![Code Climate Status](https://codeclimate.com/github/wfarr/stretch.png)](https://codeclimate.com/github/wfarr/stretch)
+
 Elasticsearch client library written for people who like understandable
 documentation and understandable code.
 
