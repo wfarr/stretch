@@ -40,11 +40,17 @@ module Stretch
         case method
         when :get
           options.each { |k,v| request.params[k] = v }
+        when :post, :put
+          request.body = MultiJson.dump(options)
         end
       end
 
       if response.success?
-        MultiJson.load response.body
+        if response.body.empty?
+          request :get, path
+        else
+          MultiJson.load response.body
+        end
       else
         response.error!
       end
