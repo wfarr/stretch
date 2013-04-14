@@ -6,7 +6,7 @@ module Stretch
   class Connection
     attr_reader :connection
 
-    REQUEST_METHODS = [ :get, :post, :put, :delete ]
+    REQUEST_METHODS = [ :get, :post, :put, :delete ].freeze
 
     def initialize options = {}
       @connection = Faraday.new(options) do |builder|
@@ -21,29 +21,30 @@ module Stretch
     end
 
     def get path, options = {}
-      response = request :get, path, options
+      request :get, path, options
     end
 
     def post path, options = {}
-      response = request :post, path, options
+      request :post, path, options
     end
 
     def put path, options = {}
-      response = request :put, path, options
+      request :put, path, options
     end
 
     def delete path, options = {}
-      response = request :delete, path, options
+      request :delete, path, options
     end
 
     private
-    def request method, path, options = {}
+    def request method, path, options
       unless REQUEST_METHODS.member? method
         raise Stretch::UnsupportedRequestMethod, "#{method} is not supported!"
       end
 
       response = connection.send(method) do |request|
-        request.url path, options
+        request.headers["Accept"] = "application/json"
+        request.path = path
       end
 
       if response.success?
