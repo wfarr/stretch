@@ -43,14 +43,14 @@ describe Stretch::Client do
 
     it "requests cluster health if the scope is cluster" do
       instance.stub :connection, connection do
-        connection.expect :get, { "status" => "ok" }, %w(/_cluster/health)
+        connection.expect :get, { "status" => "ok" }, ["/_cluster/health", {}]
         instance.cluster.health
       end
     end
 
     it "requests index health if the scope is an index" do
       instance.stub :connection, connection do
-        connection.expect :get, { "status" => "ok" }, %w(/foo/health)
+        connection.expect :get, { "status" => "ok" }, ["/foo/health", {}]
         instance.index("foo").health
       end
     end
