@@ -29,9 +29,7 @@ module Stretch
 
     private
     def request method, path, options = {}
-      unless REQUEST_METHODS.member? method
-        raise Stretch::UnsupportedRequestMethod, "#{method} is not supported!"
-      end
+      validate_request_method method
 
       response = connection.send(method) do |request|
         request.headers["Accept"] = "application/json"
@@ -45,6 +43,16 @@ module Stretch
         end
       end
 
+      handle_response response
+    end
+
+    def validate_request_method method
+      unless REQUEST_METHODS.member? method
+        raise Stretch::UnsupportedRequestMethod, "#{method} is not supported!"
+      end
+    end
+
+    def handle_response response
       if response.success?
         if response.body.empty?
           request :get, path
