@@ -8,9 +8,11 @@ Gem::Specification.new do |spec|
   spec.version       = Stretch::VERSION
   spec.authors       = ["Will Farrington"]
   spec.email         = ["wfarr@github.com"]
-  spec.description   = %q{Shh, it's a secret}
-  spec.summary       = %q{Still seriously a secret}
-  spec.homepage      = ""
+  spec.description   = %q{An Elasticsearch client library}
+  spec.summary       = %q{It's not anywhere near complete at this time, but
+    the code is pretty all right allegedly.
+  }
+  spec.homepage      = "https://github.com/wfarr/stretch"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
