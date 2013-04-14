@@ -5,7 +5,7 @@ set -e
 root=$(cd "$(dirname $0)"/.. && pwd)
 
 echo "Bundling..."
-script/bootstrap --quiet
+script/bootstrap
 
 ruby -I"${root}/test" -e \
   "(ARGV.empty? ? Dir['${root}/test/**/*_test.rb'] : ARGV).each { |f| load f }"
