@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |spec|
   spec.name          = "stretch"
-  spec.version       = "0.1.2"
+  spec.version       = "0.1.3"
   spec.authors       = ["Will Farrington"]
   spec.email         = ["wfarr@github.com"]
   spec.description   = %q{An Elasticsearch client library}
