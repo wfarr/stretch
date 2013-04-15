@@ -1,11 +1,8 @@
 # coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'stretch/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "stretch"
-  spec.version       = Stretch::VERSION
+  spec.version       = "0.1.2"
   spec.authors       = ["Will Farrington"]
   spec.email         = ["wfarr@github.com"]
   spec.description   = %q{An Elasticsearch client library}
