@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "faraday",    "~> 0.8.7"
+  spec.add_dependency "faraday",    "~> 0.8.0"
   spec.add_dependency "multi_json", "~> 1.7.2"
 
   spec.add_development_dependency "bundler",  "~> 1.2"
