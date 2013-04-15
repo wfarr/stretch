@@ -1,5 +1,4 @@
 require "stretch/client"
-require "stretch/version"
 
 module Stretch
   class InvalidScope < StandardError; end
